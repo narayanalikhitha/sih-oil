@@ -32,7 +32,7 @@ function getMockResponse(config = {}) {
       body = typeof config.data === 'string' ? JSON.parse(config.data) : config.data || {};
     } catch {}
     const email = (body.email || '').trim().toLowerCase();
-    const user = DEMO_USERS[email] || DEMO_USERS['engineer@ertmac.demo'];
+    const user = DEMO_USERS[email] || DEMO_USERS['admin@ertmac.demo'];
     return {
       status: 200, statusText: 'OK',
       data: {
@@ -47,14 +47,100 @@ function getMockResponse(config = {}) {
   // 2. Auth Current User
   if (url.includes('/auth/me')) {
     const stored = localStorage.getItem('ertmac_user');
-    const user = stored ? JSON.parse(stored) : DEMO_USERS['engineer@ertmac.demo'];
+    const user = stored ? JSON.parse(stored) : DEMO_USERS['admin@ertmac.demo'];
     return {
       status: 200, statusText: 'OK',
       data: { success: true, user },
     };
   }
 
-  // 3. Analytics Overview
+  // 3. Admin System Health
+  if (url.includes('/admin/system-health')) {
+    return {
+      status: 200, statusText: 'OK',
+      data: {
+        success: true,
+        data: {
+          services: {
+            database: { status: 'HEALTHY', message: 'Connected to eRTMAC Cluster' },
+            aiService: { status: 'HEALTHY', message: 'FastAPI AI Engine v2.0' },
+            ragVectorDB: { status: 'INDEXED', message: 'FAISS Vector DB Ready' },
+            geminiLLM: { status: 'CONFIGURED', message: 'Gemini 1.5 Flash Active' },
+            authJWT: { status: 'HEALTHY', message: 'JWT Signature Engine OK' },
+          },
+          system: {
+            nodeVersion: 'v20.x',
+            platform: 'Cloud CDN / Linux',
+            uptime: 86400,
+            memoryUsage: { heapUsed: 142, heapTotal: 256 },
+          },
+        },
+      },
+    };
+  }
+
+  // 4. Admin RAG Status
+  if (url.includes('/rag/status')) {
+    return {
+      status: 200, statusText: 'OK',
+      data: {
+        success: true,
+        data: {
+          status: 'INDEXED',
+          vectorCount: 24,
+          totalChunks: 48,
+          verifiedChunks: 42,
+          aiServiceAvailable: true,
+          documentsCount: 4,
+          lastIndexed: '2024-03-15T10:30:00.000Z',
+          model: 'all-MiniLM-L6-v2',
+          geminiModel: 'gemini-1.5-flash',
+        },
+      },
+    };
+  }
+
+  // 5. Admin Data Quality
+  if (url.includes('/admin/data-quality')) {
+    return {
+      status: 200, statusText: 'OK',
+      data: {
+        success: true,
+        data: {
+          qualityScore: 96,
+          issues: [
+            { type: 'PENDING_EXTRACTION_REVIEW', count: 1, severity: 'INFO', message: '1 extracted DDR event waiting for engineer sign-off' },
+            { type: 'COORDINATE_PRECISION', count: 0, severity: 'LOW', message: 'All active well coordinates have high GPS precision' },
+          ],
+        },
+      },
+    };
+  }
+
+  // 6. Admin Audit Logs
+  if (url.includes('/admin/audit-logs')) {
+    const logs = [
+      { _id: 'log-1', timestamp: new Date(Date.now() - 300000).toISOString(), userName: 'Admin Kumar', userRole: 'ADMIN', action: 'LOGIN', entityType: 'User', details: { method: 'JWT' } },
+      { _id: 'log-2', timestamp: new Date(Date.now() - 1800000).toISOString(), userName: 'Rajesh Engineer', userRole: 'ENGINEER', action: 'RISK_ACKNOWLEDGED', entityType: 'RiskAlert', details: { wellName: 'WELL-101' } },
+      { _id: 'log-3', timestamp: new Date(Date.now() - 3600000).toISOString(), userName: 'Admin Kumar', userRole: 'ADMIN', action: 'DATA_APPROVED', entityType: 'DrillingEvent', details: { eventType: 'MUD_LOSS', depth: 2850 } },
+      { _id: 'log-4', timestamp: new Date(Date.now() - 7200000).toISOString(), userName: 'Manager Singh', userRole: 'MANAGER', action: 'LOGIN', entityType: 'User', details: { method: 'JWT' } },
+    ];
+    return {
+      status: 200, statusText: 'OK',
+      data: { success: true, data: logs },
+    };
+  }
+
+  // 7. Users Management
+  if (url.includes('/users')) {
+    const usersList = Object.values(DEMO_USERS);
+    return {
+      status: 200, statusText: 'OK',
+      data: { success: true, data: usersList },
+    };
+  }
+
+  // 8. Analytics Overview
   if (url.includes('/analytics/overview')) {
     return {
       status: 200, statusText: 'OK',
@@ -62,7 +148,7 @@ function getMockResponse(config = {}) {
     };
   }
 
-  // 4. Analytics Event / Risk / Well
+  // 9. Analytics Events
   if (url.includes('/analytics/events')) {
     return {
       status: 200, statusText: 'OK',
@@ -88,7 +174,7 @@ function getMockResponse(config = {}) {
     };
   }
 
-  // 5. Wells - Nearby / Offset Match / Single / List
+  // 10. Wells
   if (url.includes('/offset-match/')) {
     return {
       status: 200, statusText: 'OK',
@@ -140,7 +226,7 @@ function getMockResponse(config = {}) {
     };
   }
 
-  // 6. Risk Alerts
+  // 11. Risk Alerts
   if (url.includes('/risks')) {
     return {
       status: 200, statusText: 'OK',
@@ -148,7 +234,7 @@ function getMockResponse(config = {}) {
     };
   }
 
-  // 7. Drilling Events
+  // 12. Drilling Events
   if (url.includes('/events')) {
     return {
       status: 200, statusText: 'OK',
@@ -156,7 +242,7 @@ function getMockResponse(config = {}) {
     };
   }
 
-  // 8. Telemetry Readings
+  // 13. Telemetry Readings
   if (url.includes('/readings')) {
     return {
       status: 200, statusText: 'OK',
@@ -164,7 +250,7 @@ function getMockResponse(config = {}) {
     };
   }
 
-  // 9. Reports
+  // 14. Reports
   if (url.includes('/reports')) {
     return {
       status: 200, statusText: 'OK',
@@ -172,7 +258,7 @@ function getMockResponse(config = {}) {
     };
   }
 
-  // 10. Knowledge Graph
+  // 15. Knowledge Graph
   if (url.includes('/knowledge-graph')) {
     const nodes = [
       { id: 'well-101', label: 'WELL-101', type: 'WELL', data: { field: 'Deohal Field', status: 'DRILLING' } },
@@ -199,7 +285,7 @@ function getMockResponse(config = {}) {
     };
   }
 
-  // 11. AI Operations Summary Briefing
+  // 16. AI Operations Summary Briefing
   if (url.includes('/ai/operations-summary')) {
     return {
       status: 200, statusText: 'OK',
@@ -221,7 +307,7 @@ function getMockResponse(config = {}) {
     };
   }
 
-  // 12. AI Compare Wells
+  // 17. AI Compare Wells
   if (url.includes('/ai/compare-wells')) {
     return {
       status: 200, statusText: 'OK',
@@ -238,7 +324,7 @@ function getMockResponse(config = {}) {
     };
   }
 
-  // 13. AI Chat
+  // 18. AI Chat
   if (url.includes('/ai/chat')) {
     return {
       status: 200, statusText: 'OK',

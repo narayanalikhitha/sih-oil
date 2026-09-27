@@ -566,16 +566,35 @@ const Landing = () => {
             <div className="p-8">
               {/* Demo quick-access */}
               <div className="mb-6">
-                <p className="text-xs font-semibold text-slate-400 uppercase tracking-wide text-center mb-3">
-                  Quick Access — Demo Accounts
+                <p className="text-xs font-semibold text-slate-500 uppercase tracking-wide text-center mb-1">
+                  1. Choose a Demo Account to Fill Form
+                </p>
+                <p className="text-[11px] text-slate-400 text-center mb-3">
+                  (Fills email & password below — then click Sign In)
                 </p>
                 <div className="grid grid-cols-3 gap-2">
-                  {['ENGINEER', 'MANAGER', 'ADMIN'].map(role => (
-                    <button key={role} onClick={() => quickLogin(role)} disabled={loading}
-                      className="py-2.5 text-xs font-bold border-2 rounded-xl transition-all disabled:opacity-50 border-slate-200 text-slate-600 hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50">
-                      {role}
-                    </button>
-                  ))}
+                  {[
+                    { role: 'ENGINEER', email: 'engineer@ertmac.demo' },
+                    { role: 'MANAGER', email: 'manager@ertmac.demo' },
+                    { role: 'ADMIN', email: 'admin@ertmac.demo' },
+                  ].map(({ role, email: roleEmail }) => {
+                    const isSelected = email === roleEmail;
+                    return (
+                      <button
+                        type="button"
+                        key={role}
+                        onClick={() => quickLogin(role)}
+                        disabled={loading}
+                        className={`py-2.5 text-xs font-bold border-2 rounded-xl transition-all disabled:opacity-50 ${
+                          isSelected
+                            ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
+                            : 'border-slate-200 text-slate-600 hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50'
+                        }`}
+                      >
+                        {isSelected ? `✓ ${role}` : role}
+                      </button>
+                    );
+                  })}
                 </div>
               </div>
 

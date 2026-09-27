@@ -105,19 +105,36 @@ const Login = () => {
 
           {/* Demo accounts */}
           <div className="mt-6 pt-5 border-t border-slate-100">
-            <p className="text-xs text-slate-400 text-center mb-3">
-              Demo Accounts — Representative Demonstration Data
+            <p className="text-xs font-semibold text-slate-500 text-center mb-1">
+              Select Demo Account to Fill Form
+            </p>
+            <p className="text-[11px] text-slate-400 text-center mb-3">
+              (Fills email & password above — then click Sign In)
             </p>
             <div className="grid grid-cols-3 gap-2">
-              {['ENGINEER', 'MANAGER', 'ADMIN'].map(role => (
-                <button type="button" key={role} onClick={() => fillDemo(role)}
-                  className="py-2 text-xs border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 hover:border-blue-200 hover:text-blue-600 transition-colors font-medium"
-                >
-                  {role}
-                </button>
-              ))}
+              {[
+                { role: 'ENGINEER', email: 'engineer@ertmac.demo' },
+                { role: 'MANAGER', email: 'manager@ertmac.demo' },
+                { role: 'ADMIN', email: 'admin@ertmac.demo' },
+              ].map(({ role, email: roleEmail }) => {
+                const isSelected = email === roleEmail;
+                return (
+                  <button
+                    type="button"
+                    key={role}
+                    onClick={() => fillDemo(role)}
+                    className={`py-2 text-xs border-2 rounded-lg transition-all font-semibold ${
+                      isSelected
+                        ? 'bg-blue-600 text-white border-blue-600 shadow-sm'
+                        : 'border-slate-200 text-slate-600 hover:border-blue-400 hover:text-blue-600 hover:bg-blue-50'
+                    }`}
+                  >
+                    {isSelected ? `✓ ${role}` : role}
+                  </button>
+                );
+              })}
             </div>
-            <p className="text-xs text-slate-300 text-center mt-2">Password: Demo@2024</p>
+            <p className="text-xs text-slate-400 text-center mt-2.5">Password: Demo@2024</p>
           </div>
         </div>
 

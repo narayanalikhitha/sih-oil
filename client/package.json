@@ -11,6 +11,7 @@
   "dependencies": {
     "@tanstack/react-query": "^5.13.4",
     "axios": "^1.6.2",
+    "caniuse-lite": "^1.0.30001812",
     "date-fns": "^3.0.6",
     "leaflet": "^1.9.4",
     "lucide-react": "^0.303.0",

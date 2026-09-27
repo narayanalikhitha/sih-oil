@@ -146,7 +146,7 @@ const Landing = () => {
     }
   };
 
-  const quickLogin = async (role) => {
+  const quickLogin = (role) => {
     const creds = {
       ENGINEER: ['engineer@ertmac.demo', 'Demo@2024'],
       MANAGER:  ['manager@ertmac.demo',  'Demo@2024'],
@@ -156,16 +156,7 @@ const Landing = () => {
     setEmail(roleEmail);
     setPassword(rolePass);
     setLoginOpen(true);
-    setLoading(true);
     setError('');
-    try {
-      const user = await login(roleEmail, rolePass);
-      const map = { ADMIN: '/admin/dashboard', MANAGER: '/manager/dashboard', ENGINEER: '/engineer/dashboard' };
-      navigate(map[user.role] || '/engineer/dashboard');
-    } catch (err) {
-      setError(err.response?.data?.message || 'Demo login failed. Please try again.');
-      setLoading(false);
-    }
   };
 
   const stats = [

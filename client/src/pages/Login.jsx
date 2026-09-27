@@ -110,7 +110,7 @@ const Login = () => {
             </p>
             <div className="grid grid-cols-3 gap-2">
               {['ENGINEER', 'MANAGER', 'ADMIN'].map(role => (
-                <button key={role} onClick={() => fillDemo(role)}
+                <button type="button" key={role} onClick={() => fillDemo(role)}
                   className="py-2 text-xs border border-slate-200 rounded-lg text-slate-600 hover:bg-slate-50 hover:border-blue-200 hover:text-blue-600 transition-colors font-medium"
                 >
                   {role}
